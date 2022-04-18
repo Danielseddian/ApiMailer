@@ -2,8 +2,8 @@ from django.core import validators
 from django.db import models
 from django.template.defaultfilters import slugify
 
-MIN_VALIDATOR = validators.MinValueValidator
-MAX_VALIDATOR = validators.MaxValueValidator
+MIN = validators.MinValueValidator
+MAX = validators.MaxValueValidator
 STATUS = {True: "доставлено", False: "не доставлено"}
 
 
@@ -25,12 +25,10 @@ class Tag(models.Model):
 
 
 class Client(models.Model):
-    phone = models.PositiveIntegerField(
-        verbose_name="Номер телефона", unique=True
-    )
+    phone = models.PositiveIntegerField(verbose_name="Номер телефона", unique=True)
     phone_code = models.PositiveSmallIntegerField(verbose_name="Код мобильного оператора")
     tags = models.ManyToManyField(Tag, verbose_name="Тег", related_name="clients")
-    utc = models.SmallIntegerField(validators=[MIN_VALIDATOR(-12), MAX_VALIDATOR(12)])
+    utc = models.SmallIntegerField(validators=[MIN(-12), MAX(12)])
 
     class Meta:
         verbose_name = "Клиент"

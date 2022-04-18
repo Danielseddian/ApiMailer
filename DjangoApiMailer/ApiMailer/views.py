@@ -8,22 +8,24 @@ class ClientViewSet(ModelViewSet):
     serializer_class = ClientSerializer
 
     def create(self, request, *args, **kwargs):
-        data["utc"] = (data := request.data).get("utc") or data.get("UTC") or data.get("time_zone") or BASE_UTC
-        data["phone"] = data.get("phone") or data.get("mobile")
-        data["phone_code"] = data.get("phone_code") or int(str(data["phone"])[1:4])
+        data["phone"] = str((data := request.data).get("phone") or data.get("mobile")).replace("+", "")
+        data["phone_code"] = data.get("phone_code") or data.get("mobile_code") or data["phone"][1:4]
+        data["utc"] = data.get("utc") or data.get("UTC") or data.get("time_zone") or BASE_UTC
         return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(tags=self.request.data["tags"])
+        serializer.save(tags=self.request.data.get("tags", []))
 
     def perform_update(self, serializer):
-        serializer.save(tags=self.request.data["tags"])
+        serializer.save(tags=self.request.data.get("tags", []))
 
 
 class MailViewSet(ModelViewSet):
     queryset = Mail.objects.all()
     serializer_class = MailSerializer
-    clients = Client.objects.all().only("id")
 
     def perform_create(self, serializer):
+        serializer.save(clients=self.request.data.get("clients", []))
+
+    def perform_update(self, serializer):
         serializer.save(clients=self.request.data.get("clients", []))
