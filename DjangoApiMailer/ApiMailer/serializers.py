@@ -79,5 +79,4 @@ class MailSerializer(serializers.ModelSerializer):
             Message(sent_time=dt.now(tz(td(hours=BASE_UTC))), status=False, mailing=mailing, client=client)
             for client in clients
         ]
-        messages = Message.objects.bulk_create(message_bodies)
-        asyncio.create_task(send_mailing_by_url(MAILING_URL, messages))
+        Message.objects.bulk_create(message_bodies)
