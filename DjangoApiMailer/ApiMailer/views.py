@@ -1,9 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
-from datetime import datetime as dt
 
-from .serializers import Client, ClientSerializer, Mail, MailSerializer, Message, MessageSerializer
-
-BASE_UTC = 3
+from .serializers import Client, ClientSerializer, Mail, MailSerializer, BASE_UTC
 
 
 class ClientViewSet(ModelViewSet):
@@ -11,10 +8,10 @@ class ClientViewSet(ModelViewSet):
     serializer_class = ClientSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data["UTC"] = (data := request.data).get("UTC") or data.get("utc") or data.get("time_zone") or BASE_UTC
-        request.data["phone"] = int(data.get("phone")) or int(data.get("mobile"))
-        request.data["phone_code"] = int(data.get("phone_code")) or int(str(data["phone"])[1:4])
-        super().create(request, args, kwargs)
+        data["utc"] = (data := request.data).get("utc") or data.get("UTC") or data.get("time_zone") or BASE_UTC
+        data["phone"] = data.get("phone") or data.get("mobile")
+        data["phone_code"] = data.get("phone_code") or int(str(data["phone"])[1:4])
+        return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(tags=self.request.data["tags"])
@@ -26,8 +23,7 @@ class ClientViewSet(ModelViewSet):
 class MailViewSet(ModelViewSet):
     queryset = Mail.objects.all()
     serializer_class = MailSerializer
+    clients = Client.objects.all().only("id")
 
     def perform_create(self, serializer):
-        serializer.save(clients=self.request.data.get("clients"))
-        for client in (data := serializer.data).get("clients"):
-            MessageSerializer(mailing=data["id"], client=client["id"], sent_time=dt.now(), status=False).save()
+        serializer.save(clients=self.request.data.get("clients", []))

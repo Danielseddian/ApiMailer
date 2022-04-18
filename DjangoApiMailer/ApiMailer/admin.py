@@ -9,6 +9,7 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = shown_fields
     list_editable = ("utc",)
     filter_horizontal = ("tags", )
+    list_display_links = ("id", "phone")
     search_fields = shown_fields
     list_filter = shown_fields
     empty_value_display = "-пусто-"
@@ -16,11 +17,11 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Mail)
 class MailAdmin(admin.ModelAdmin):
-    shown_fields = ["id", "start", "end", "text"]
-    list_display = shown_fields
+    shown_fields = ["id", "start", "end"]
+    list_display = shown_fields + ["text"]
     list_editable = ["text"]
-    # list_display_links = ()
-    # filter_horizontal = ()
+    list_display_links = shown_fields
+    filter_horizontal = ("clients", )
     search_fields = shown_fields
     list_filter = shown_fields
     empty_value_display = "-пусто-"
@@ -30,9 +31,6 @@ class MailAdmin(admin.ModelAdmin):
 class MesageAdmin(admin.ModelAdmin):
     shown_fields = ["client", "mailing"]
     list_display = shown_fields + ["id"]
-    # list_editable = ()
-    # list_display_links = ()
-    # filter_horizontal = ()
     search_fields = shown_fields
     list_filter = shown_fields
     empty_value_display = "-пусто-"
@@ -40,11 +38,10 @@ class MesageAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ("name",)
-    # list_editable = ()
-    # list_display_links = ()
-    # filter_horizontal = ()
-    search_fields = ("name",)
-    list_filter = ("name",)
+    shown_fields = ["name", "slug"]
+    list_display = ["id"] + shown_fields
+    list_editable = shown_fields
+    search_fields = shown_fields
+    list_filter = shown_fields
     empty_value_display = "-пусто-"
 

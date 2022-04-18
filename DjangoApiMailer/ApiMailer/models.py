@@ -25,7 +25,9 @@ class Tag(models.Model):
 
 
 class Client(models.Model):
-    phone = models.PositiveSmallIntegerField(verbose_name="Номер телефона", unique=True)
+    phone = models.PositiveIntegerField(
+        verbose_name="Номер телефона", unique=True
+    )
     phone_code = models.PositiveSmallIntegerField(verbose_name="Код мобильного оператора")
     tags = models.ManyToManyField(Tag, verbose_name="Тег", related_name="clients")
     utc = models.SmallIntegerField(validators=[MIN_VALIDATOR(-12), MAX_VALIDATOR(12)])
@@ -40,10 +42,10 @@ class Client(models.Model):
 
 
 class Mail(models.Model):
-    start = models.DateTimeField(verbose_name="Дата и время начала рассылки")
+    start = models.DateTimeField(verbose_name="Дата и время начала рассылки", null=True, blank=True)
     text = models.TextField(verbose_name="Текст сообщения")
     clients = models.ManyToManyField(Client, verbose_name="Получатели", related_name="mails")
-    end = models.DateTimeField(verbose_name="Дата и время окончания рассылки")
+    end = models.DateTimeField(verbose_name="Дата и время окончания рассылки", null=True, blank=True)
 
     class Meta:
         verbose_name = "Рассылка"
@@ -70,7 +72,6 @@ class Message(models.Model):
                 name="uniq_mail",
             ),
         ]
-
 
     def __str__(self):
         return (
