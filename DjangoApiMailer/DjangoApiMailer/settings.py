@@ -2,6 +2,8 @@ from pathlib import Path
 from os import environ
 from os.path import join
 
+MAILING_URL = "https://probe.fbrq.cloud/v1/send"
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 context_processors = "django.template.context_processors."

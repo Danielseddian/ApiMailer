@@ -21,7 +21,7 @@ class Tag(models.Model):
         super(Tag, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"Тег: {self.name}, метка: {self.slug}"
+        return f"Id: {self.id}, название: {self.name}, метка: {self.slug}"
 
 
 class Client(models.Model):
@@ -36,7 +36,7 @@ class Client(models.Model):
         ordering = ("phone",)
 
     def __str__(self):
-        return f"Клиент: {self.phone}, часовой пояс: {self.utc}"
+        return f"Id: {self.id}, телефон: {self.phone}, код оператора: {self.phone_code} часовой пояс: {self.utc}"
 
 
 class Mail(models.Model):
@@ -51,7 +51,7 @@ class Mail(models.Model):
         ordering = ("start",)
 
     def __str__(self):
-        return f"Текст сообщения: {self.text[:50]}, начало рассылки: {self.start}, окочание: {self.end}"
+        return f"id: {self.id}, текст сообщения: {self.text[:50]}, начало рассылки: {self.start}, окочание: {self.end}"
 
 
 class Message(models.Model):
@@ -73,6 +73,6 @@ class Message(models.Model):
 
     def __str__(self):
         return (
-            f"Сообщение: {self.mailing.text[:25]} клиенту: **{str(self.client.phone)[-4:]}, "
-            f"отправлено:  {self.sent_time}, статус: {STATUS[self.status]}"
+            f"Id: {self.id}, сообщение: {self.mailing.text[:25]} клиенту: id: {self.client.id}, телефон: "
+            f"**{str(self.client.phone)[-4:]}, отправлено:  {self.sent_time}, статус: {STATUS[self.status]}"
         )
