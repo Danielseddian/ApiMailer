@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Python trainer online</title>
+</head>
+    <body>
+        <main>
+            <div class="container">
+                  <h1>{% block header %}Train your python code skills{% endblock %}</h1>
+                  {% block content %}
+                  <!-- Содержимое страницы -->
+                  {% endblock %}
+            </div>
+        </main>
+        {% include 'includes/footer.html' %}
+    </body>
+</html>
