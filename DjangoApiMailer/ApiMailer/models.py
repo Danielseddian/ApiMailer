@@ -1,6 +1,5 @@
 from django.core import validators
 from django.db import models
-from django.template.defaultfilters import slugify
 
 MIN = validators.MinValueValidator
 MAX = validators.MaxValueValidator
@@ -15,10 +14,6 @@ class Tag(models.Model):
         verbose_name = "Тег"
         verbose_name_plural = "Теги"
         ordering = ("slug",)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Tag, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"Id: {self.id}, название: {self.name}, метка: {self.slug}"

@@ -1,11 +1,16 @@
 from rest_framework.viewsets import ModelViewSet
+from itertools import chain
 
-from .serializers import Client, ClientSerializer, Mail, MailSerializer, BASE_UTC
+from .serializers import Client, ClientSerializer, Mail, MailSerializer, BASE_UTC, Tag
 
 
 class ClientViewSet(ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
+
+    def get_queryset(self):
+        print(Tag.objects.get(id=1).clients.all())
+        return self.queryset
 
     def create(self, request, *args, **kwargs):
         data["phone"] = str((data := request.data).get("phone") or data.get("mobile")).replace("+", "")

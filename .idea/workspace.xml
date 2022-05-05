@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8db38ea8-360d-44b4-943b-d4f175d0b073" name="Changes" comment="" />
+    <list default="true" id="8db38ea8-360d-44b4-943b-d4f175d0b073" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DjangoApiMailer/ApiMailer/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoApiMailer/ApiMailer/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DjangoApiMailer/ApiMailer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoApiMailer/ApiMailer/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -33,6 +37,8 @@
       <option name="presentableId" value="Default" />
       <updated>1650017761148</updated>
       <workItem from="1650017762608" duration="13000" />
+      <workItem from="1650379398107" duration="15000" />
+      <workItem from="1650795773490" duration="6000" />
     </task>
     <servers />
   </component>
