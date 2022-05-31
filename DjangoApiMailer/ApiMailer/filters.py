@@ -4,3 +4,4 @@ from rest_framework.pagination import PageNumberPagination
 
 from .models import Mail
 
+from django.contrib.auth.forms import UserCreationForm

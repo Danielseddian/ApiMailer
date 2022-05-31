@@ -30,6 +30,8 @@ LOCAL_APPS = [
 
 OTHER_APPS = [
     "djoser",
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + OTHER_APPS
@@ -120,3 +122,14 @@ ROOT_URLCONF = "DjangoApiMailer.urls"
 WSGI_APPLICATION = "DjangoApiMailer.wsgi.application"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Europe/Moscow"
+
+CELERY_TASK_TRACK_STARTED = True
+
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+
+CELERY_RESULT_BACKEND = "django-db"

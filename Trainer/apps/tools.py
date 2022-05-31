@@ -32,3 +32,17 @@ def get_import(module_name, directory):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def check_resolve(task, resolve):
+    file_name = "resolve"
+    file_path = write_to_the_file("\n\n".join((task.code, resolve.resolve)), check_directory(resolve.folder), file_name)
+    result = []
+    for data in task.data:
+        try:
+            resolving = get_import(file_name, file_path)
+            getattr(resolving, task.call)(data)
+            result.append(getattr(resolving, "get_result")())
+        except Exception as exc:
+            result.append(exc)
+    return result

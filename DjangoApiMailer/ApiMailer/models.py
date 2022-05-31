@@ -23,7 +23,7 @@ class Client(models.Model):
     phone = models.PositiveIntegerField(verbose_name="Номер телефона", unique=True)
     phone_code = models.PositiveSmallIntegerField(verbose_name="Код мобильного оператора")
     tags = models.ManyToManyField(Tag, verbose_name="Тег", related_name="clients")
-    utc = models.SmallIntegerField(validators=[MIN(-12), MAX(12)])
+    time_zone = models.SmallIntegerField(validators=[MIN(-12), MAX(12)])
 
     class Meta:
         verbose_name = "Клиент"
@@ -31,7 +31,7 @@ class Client(models.Model):
         ordering = ("phone",)
 
     def __str__(self):
-        return f"Id: {self.id}, телефон: {self.phone}, код оператора: {self.phone_code} часовой пояс: {self.utc}"
+        return f"Id: {self.id}, телефон: {self.phone}, код оператора: {self.phone_code} часовой пояс: {self.time_zone}"
 
 
 class Mail(models.Model):
@@ -51,7 +51,7 @@ class Mail(models.Model):
 
 class Message(models.Model):
     status = models.BooleanField(verbose_name="Статус отправки")
-    sent_time = models.DateTimeField()
+    sent_time = models.DateTimeField(blank=True, null=True, verbose_name="Дата отправки")
     mailing = models.ForeignKey(Mail, verbose_name="Рассылка", on_delete=models.CASCADE, related_name="messages")
     client = models.ForeignKey(Client, verbose_name="Кому", on_delete=models.CASCADE, related_name="messages")
 

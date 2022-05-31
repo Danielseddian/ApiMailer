@@ -5,9 +5,9 @@ from .models import Client, Mail, Message, Tag
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    shown_fields = ("id", "phone", "utc")
+    shown_fields = ("id", "phone", "time_zone")
     list_display = shown_fields
-    list_editable = ("utc",)
+    list_editable = ("time_zone",)
     filter_horizontal = ("tags", )
     list_display_links = ("id", "phone")
     search_fields = shown_fields

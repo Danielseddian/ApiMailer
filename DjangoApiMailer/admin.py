@@ -8,7 +8,7 @@ class ClientAdmin(admin.ModelAdmin):
     shown_fields = ("id", "phone", "utc")
     list_display = shown_fields
     list_display_links = ("id", "phone",)
-    list_editable = ("utc",)
+    list_editable = ("time_zone",)
     filter_horizontal = ("tags", )
     search_fields = shown_fields
     list_filter = shown_fields

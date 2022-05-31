@@ -13,9 +13,9 @@ class ClientViewSet(ModelViewSet):
         return self.queryset
 
     def create(self, request, *args, **kwargs):
-        data["phone"] = str((data := request.data).get("phone") or data.get("mobile")).replace("+", "")
+        data["phone"] = (str((data := request.data).get("phone") or str(data.get("mobile")))).replace("+", "")
         data["phone_code"] = data.get("phone_code") or data.get("mobile_code") or data["phone"][1:4]
-        data["utc"] = data.get("utc") or data.get("UTC") or data.get("time_zone") or BASE_UTC
+        data["time_zone"] = data.get("utc") or data.get("UTC") or data.get("time_zone") or BASE_UTC
         return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):

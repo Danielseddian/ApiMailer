@@ -4,7 +4,6 @@ from rest_framework import serializers
 from datetime import datetime as dt, timezone as tz, timedelta as td
 
 from DjangoApiMailer.settings import MAILING_URL
-from .mailers import send_mailing_by_url
 from .models import Tag, Mail, Client, Message
 from .validators import validate_phone_length
 
@@ -40,7 +39,7 @@ class MailSerializer(serializers.ModelSerializer):
         "ids": "id__in",
         "phones": "phone__in",
         "tags": "tags__in",
-        "utc": "utc__in",
+        "time_zones": "time_zone__in",
         "phone_codes": "phone_code__in",
     }
     clients = ClientSerializer(many=True, read_only=True)
