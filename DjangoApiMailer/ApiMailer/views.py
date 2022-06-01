@@ -1,16 +1,12 @@
 from rest_framework.viewsets import ModelViewSet
-from itertools import chain
+from django.utils.text import slugify
 
-from .serializers import Client, ClientSerializer, Mail, MailSerializer, BASE_UTC, Tag
+from .serializers import Client, ClientSerializer, Mail, MailSerializer, BASE_UTC, bulk_get_or_create_tags
 
 
 class ClientViewSet(ModelViewSet):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
-
-    def get_queryset(self):
-        print(Tag.objects.get(id=1).clients.all())
-        return self.queryset
 
     def create(self, request, *args, **kwargs):
         data["phone"] = (str((data := request.data).get("phone") or str(data.get("mobile")))).replace("+", "")
@@ -19,10 +15,11 @@ class ClientViewSet(ModelViewSet):
         return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(tags=self.request.data.get("tags", []))
+        serializer.save(tags=bulk_get_or_create_tags(self.request.data.get("tags", [])))
 
     def perform_update(self, serializer):
-        serializer.save(tags=self.request.data.get("tags", []))
+        tags = bulk_get_or_create_tags(self.request.data.get("tags", []))
+        serializer.save(tags=bulk_get_or_create_tags(self.request.data.get("tags", [])))
 
 
 class MailViewSet(ModelViewSet):

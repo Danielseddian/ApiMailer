@@ -1,10 +1,11 @@
 from pathlib import Path
-from os import environ
-from os.path import join
-
-MAILING_URL = "https://probe.fbrq.cloud/v1/send"
+from os import path, getenv
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+if path.exists(env_path := path.join(BASE_DIR, ".env")):
+    load_dotenv(env_path)
 
 context_processors = "django.template.context_processors."
 contrib = "django.contrib."
@@ -65,12 +66,12 @@ TEMPLATES = [
 
 DATABASES = {
     "default": {
-        "ENGINE": environ.get("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": environ.get("DB_NAME", "db.sqlite3"),
-        "USER": environ.get("POSTGRES_USER", "postgres"),
-        "PASSWORD": environ.get("POSTGRES_PASSWORD", "postgres"),
-        "HOST": environ.get("DB_HOST", "localhost"),
-        "PORT": environ.get("DB_PORT", "5432"),
+        "ENGINE": getenv("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": getenv("DB_NAME", "db.sqlite3"),
+        "USER": getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": getenv("POSTGRES_PASSWORD", "postgres"),
+        "HOST": getenv("DB_HOST", "localhost"),
+        "PORT": getenv("DB_PORT", "5432"),
     }
 }
 
@@ -103,19 +104,19 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_URLS_REGEX = r"^/api/.*$"
 
-STATIC_ROOT = join(BASE_DIR, "back_static")
+STATIC_ROOT = path.join(BASE_DIR, "back_static")
 
 STATIC_URL = "/back_static/"
 
-MEDIA_ROOT = join(BASE_DIR, "media")
+MEDIA_ROOT = path.join(BASE_DIR, "media")
 
 MEDIA_URL = "/media/"
 
-SECRET_KEY = environ.get("SECRET_KEY", "some_secret_key")
+SECRET_KEY = getenv("SECRET_KEY", "some_secret_key")
 
-DEBUG = environ.get("DEBUG", True)
+DEBUG = getenv("DEBUG", True)
 
-ALLOWED_HOSTS = environ.get("ALLOWED_HOSTS", "localhost web 127.0.0.1").split()
+ALLOWED_HOSTS = getenv("ALLOWED_HOSTS", "localhost web 127.0.0.1").split()
 
 ROOT_URLCONF = "DjangoApiMailer.urls"
 
@@ -133,3 +134,7 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 
 CELERY_RESULT_BACKEND = "django-db"
+
+MAILING_TOKEN = getenv("MAILING_TOKEN")
+
+MAILING_URL = "https://probe.fbrq.cloud/v1/send"

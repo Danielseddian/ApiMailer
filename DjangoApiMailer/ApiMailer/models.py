@@ -20,7 +20,7 @@ class Tag(models.Model):
 
 
 class Client(models.Model):
-    phone = models.PositiveIntegerField(verbose_name="Номер телефона", unique=True)
+    phone = models.PositiveIntegerField(unique=True, validators=[MIN(70000000000), MAX(79999999999)])
     phone_code = models.PositiveSmallIntegerField(verbose_name="Код мобильного оператора")
     tags = models.ManyToManyField(Tag, verbose_name="Тег", related_name="clients")
     time_zone = models.SmallIntegerField(validators=[MIN(-12), MAX(12)])
@@ -31,13 +31,12 @@ class Client(models.Model):
         ordering = ("phone",)
 
     def __str__(self):
-        return f"Id: {self.id}, телефон: {self.phone}, код оператора: {self.phone_code} часовой пояс: {self.time_zone}"
+        return f"ID: {self.id}, телефон: {self.phone}, часовой пояс: {self.time_zone}, метки: {self.tags}"
 
 
 class Mail(models.Model):
     start = models.DateTimeField(verbose_name="Дата и время начала рассылки", null=True, blank=True)
     text = models.TextField(verbose_name="Текст сообщения")
-    clients = models.ManyToManyField(Client, verbose_name="Получатели", related_name="mails")
     end = models.DateTimeField(verbose_name="Дата и время окончания рассылки", null=True, blank=True)
 
     class Meta:
@@ -51,7 +50,7 @@ class Mail(models.Model):
 
 class Message(models.Model):
     status = models.BooleanField(verbose_name="Статус отправки")
-    sent_time = models.DateTimeField(blank=True, null=True, verbose_name="Дата отправки")
+    sent_time = models.DateTimeField(verbose_name="Дата создания/отправки")
     mailing = models.ForeignKey(Mail, verbose_name="Рассылка", on_delete=models.CASCADE, related_name="messages")
     client = models.ForeignKey(Client, verbose_name="Кому", on_delete=models.CASCADE, related_name="messages")
 

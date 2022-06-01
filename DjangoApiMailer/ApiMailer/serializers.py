@@ -1,34 +1,37 @@
-import asyncio
-
+from transliterate import translit
 from rest_framework import serializers
 from datetime import datetime as dt, timezone as tz, timedelta as td
+from django.utils.text import slugify
 
-from DjangoApiMailer.settings import MAILING_URL
 from .models import Tag, Mail, Client, Message
-from .validators import validate_phone_length
+from .validators import validate_phone
 
 BASE_UTC = 3
 
 
-class TagSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = "__all__"
-        model = Tag
+def translit_ru_en(text):
+    return translit(text, "ru", reversed=True)
+
+
+def bulk_get_or_create_tags(tags):
+    return [Tag.objects.get_or_create(name=tag, slug=slugify(translit_ru_en(tag)))[0] for tag in tags]
 
 
 class ClientSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True, read_only=True)
+    tags = serializers.SlugRelatedField("name", read_only=True, many=True)
 
     class Meta:
         fields = "__all__"
         model = Client
 
     def validate_phone(self, phone):
-        validate_phone_length(phone)
+        validate_phone(phone)
         return super().validate(phone)
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    client = ClientSerializer()
+
     class Meta:
         fields = "__all__"
         model = Message
@@ -38,11 +41,10 @@ class MailSerializer(serializers.ModelSerializer):
     KEYS = {
         "ids": "id__in",
         "phones": "phone__in",
-        "tags": "tags__in",
+        "tags": "tags__name__in",
         "time_zones": "time_zone__in",
         "phone_codes": "phone_code__in",
     }
-    clients = ClientSerializer(many=True, read_only=True)
     messages = MessageSerializer(many=True, read_only=True)
 
     class Meta:
@@ -52,14 +54,12 @@ class MailSerializer(serializers.ModelSerializer):
     def create(self, data):
         clients = Client.objects.filter(**self.get_filters(data.pop("clients")))
         mailing = Mail.objects.create(**data)
-        mailing.clients.set(clients)
         self.create_messages(mailing, clients)
         return mailing
 
     def update(self, mailing, data):
         clients = Client.objects.filter(**self.get_filters(data.pop("clients")))
         self.make_new_messages(mailing, clients)
-        mailing.clients.set(clients)
         super().update(mailing, data)
         return mailing
 

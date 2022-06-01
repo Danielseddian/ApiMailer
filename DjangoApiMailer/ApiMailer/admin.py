@@ -21,7 +21,6 @@ class MailAdmin(admin.ModelAdmin):
     list_display = shown_fields + ["text"]
     list_editable = ["text"]
     list_display_links = shown_fields
-    filter_horizontal = ("clients", )
     search_fields = shown_fields
     list_filter = shown_fields
     empty_value_display = "-пусто-"
